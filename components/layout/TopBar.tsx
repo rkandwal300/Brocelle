@@ -47,7 +47,7 @@ export default function TopBar() {
           <PopoverTrigger>
             <Menu className="cursor-pointer md:hidden" />
           </PopoverTrigger>
-          <PopoverContent side="bottom" className="p-0 w-52">
+          <PopoverContent side="bottom" className="p-0 w-52 md:hidden">
             <div className="flex gap-2 flex-col ">
               {navLinks.map((nav, index) => (
                 <Button
