@@ -5,6 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import LeftSideBar from "@/components/layout/LeftSideBar";
 import { cn } from "@/lib/utils";
 import TopBar from "@/components/layout/TopBar";
+import { CustomToastContainer } from "@/components/layout/ToastProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,7 +29,8 @@ export default function RootLayout({
             <LeftSideBar />
             <TopBar />
           </div>
-          <div className="flex-1 overflow-auto"> {children}</div>
+          <div className="flex flex-1 overflow-auto"> {children}</div>
+          <CustomToastContainer />
         </body>
       </html>
     </ClerkProvider>
