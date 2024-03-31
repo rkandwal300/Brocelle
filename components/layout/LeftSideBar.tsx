@@ -8,13 +8,14 @@ import { Separator } from "../ui/separator";
 import { navLinks } from "@/lib/constant";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
+import Logo from "@/public/logo.png";
 
 export default function LeftSideBar() {
   const pathname = usePathname();
   const buttonRef = useRef(null);
   return (
     <div className="h-screen overflow-auto left-0 top-0 sticky flex-col flex gap-16 bg-muted shadow-xl items-center max-lg:hidden py-10 ">
-      <Image src="/logo.png" alt="logo" width={150} height={70} />
+      <Image src={Logo} alt="logo" width={150} height={70} />
       <div className="flex flex-col ">
         {navLinks.map((nav, index) => (
           <Link
