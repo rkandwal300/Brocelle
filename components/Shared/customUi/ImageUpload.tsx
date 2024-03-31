@@ -1,6 +1,6 @@
 "use client";
 import { CldUploadWidget } from "next-cloudinary";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import { Plus, Trash } from "lucide-react";
 import Image from "next/image";
 
@@ -24,7 +24,7 @@ export default function ImageUpload({
       <div className=" mb-4 flex flex-wrap items-center gap-4">
         {value &&
           value.map((url, index) => (
-            <div key={url} className="relative w-[200px] h-[200px]">
+            <div key={url} className="relative border w-[150px] aspect-square">
               <div className="absolute top-0 right-0 z-10">
                 <Button
                   type="button"
@@ -38,7 +38,7 @@ export default function ImageUpload({
               <Image
                 src={url}
                 alt="collection"
-                className="object-cover rounded-lg"
+                className="object-contain rounded-lg"
                 fill
               />
             </div>
@@ -47,7 +47,7 @@ export default function ImageUpload({
       <CldUploadWidget uploadPreset="noscr4ee" onUpload={onUpload}>
         {({ open }) => {
           return (
-            <Button type="button" variant={"secondary"} onClick={() => open()}>
+            <Button type="button" variant={"outline"} onClick={() => open()}>
               <Plus className=" h-4 w-4mr-2" />
               Upload an Image
             </Button>

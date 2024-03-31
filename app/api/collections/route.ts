@@ -36,18 +36,18 @@ export const POST = async (req: NextRequest) => {
 };
 
 export const GET = async (req: NextRequest) => {
-  return new NextResponse(
-    " you really want all connections by this get method ",
-    {
-      status: 200,
+  try {
+    const { userId } = auth();
+    if (!userId) {
+      return new NextResponse("Unauthorized", { status: 403 });
     }
-  );
-  // try {
-  //   await connectDb();
-  //   const collections = await Collection.find();
-  //   return NextResponse.json(collections, { status: 200 });
-  // } catch (error) {
-  //   console.error("[collections_GET]", error);
-  //   return new NextResponse("Internal Server Error", { status: 500 });
-  // }
+    await connectDb();
+    const collections = await Collection.find({}).sort({ createdAt: -1 });
+    return NextResponse.json(collections, {
+      status: 200,
+    });
+  } catch (error) {
+    console.error("[collections_GET]", error);
+    return new NextResponse("Internal Server Error", { status: 500 });
+  }
 };

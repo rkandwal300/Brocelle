@@ -3,7 +3,7 @@ import { UserButton } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useRef } from "react";
-import { Separator } from "../ui/separator";
+import { Separator } from "../../ui/separator";
 
 import { navLinks } from "@/lib/constant";
 import { cn } from "@/lib/utils";

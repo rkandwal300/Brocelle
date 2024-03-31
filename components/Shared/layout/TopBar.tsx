@@ -13,7 +13,7 @@ import {
 
 import { navLinks } from "@/lib/constant";
 import { Menu } from "lucide-react";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 

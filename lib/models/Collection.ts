@@ -34,3 +34,18 @@ const CollectionSchema = new mongoose.Schema({
 const Collection =
   mongoose.models.Collection || mongoose.model("Collection", CollectionSchema);
 export default Collection;
+
+interface Product {
+  _id: mongoose.Types.ObjectId;
+  name: string;
+  // Add other properties specific to your Product schema
+}
+export type CollectionType = {
+  _id?: string;
+  title: string;
+  description?: string;
+  image: string;
+  products: Product[];
+  createdAt?: Date;
+  updatedAt?: Date;
+};
