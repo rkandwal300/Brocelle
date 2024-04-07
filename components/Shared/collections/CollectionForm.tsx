@@ -41,22 +41,30 @@ export default function CollectionForm({ variant, id }: CollectionFormProps) {
     },
   });
   const handleSubmit = async (values: z.infer<typeof CollectionSchema>) => {
-    try {
-      if (variant === "edit") {
-        await updateCollection(id!, values);
-      } else {
+    if (variant === "edit") {
+      try {
+        const data = await updateCollection(id!, values);
+        toast.success(`Collection ${data.title} updated successfully`);
+      } catch (e) {
+        toast.error(`Unable to update collection`);
+      }
+    } else {
+      try {
         await createCollection(values);
+
+        toast.success(
+          `Collection ${variant ? "created" : "updated"} successfully`
+        );
+      } catch (err) {
+        console.log("form error : ", err);
+        toast.error(`Unable to create collection`);
       }
-      toast.success(
-        `Collection ${variant ? "created" : "updated"} successfully`
-      );
-      if (sheetCloseRef?.current) {
-        sheetCloseRef.current.click();
-      }
-    } catch (err) {
-      toast.error(`Unable to ${variant} collection`);
     }
+    // if (sheetCloseRef?.current) {
+    //   sheetCloseRef.current.click();
+    // }
   };
+
   React.useEffect(() => {
     if (variant === "edit") {
       getCollection(`${id}`)
@@ -69,11 +77,18 @@ export default function CollectionForm({ variant, id }: CollectionFormProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [variant, id]);
-
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
+    if (e.key == "Enter") {
+      e.preventDefault();
+    }
+  };
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(handleSubmit)}
+        onSubmit={form.handleSubmit(
+          (values: z.infer<typeof CollectionSchema>) => handleSubmit(values)
+        )}
+        onKeyDown={handleKeyDown}
         className="px-6 flex  flex-1 flex-col gap-4"
       >
         <header className="py-3 sticky bg-background top-0 flex border-b justify-between items-center">

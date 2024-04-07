@@ -2,6 +2,8 @@ import { connectDb } from "@/lib/mongoDb";
 import { auth } from "@clerk/nextjs";
 import { NextRequest, NextResponse } from "next/server";
 import Collection from "@/lib/models/Collection";
+import { CollectionSchema } from "@/lib/validation/Collection";
+import { z } from "zod";
 
 export const GET = async (
   req: NextRequest,
@@ -9,12 +11,12 @@ export const GET = async (
 ) => {
   try {
     const { collectionId } = params;
-    const { userId } = auth();
-    if (!userId) {
-      return new NextResponse("Unauthorized", { status: 403 });
-    }
+
     await connectDb();
     const collections = await Collection.findById(collectionId);
+    if (!collections) {
+      return new NextResponse("Collection not found", { status: 404 });
+    }
     return NextResponse.json(collections, {
       status: 200,
     });
@@ -23,37 +25,37 @@ export const GET = async (
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 };
+
 export const PATCH = async (
   req: NextRequest,
   { params }: { params: { collectionId: string } }
 ) => {
   try {
     const { collectionId } = params;
-    console.log("collectionId PATCH inside route ", collectionId);
     const { userId } = auth();
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 403 });
     }
     await connectDb();
-
-    const { title, description, image } = await req.json();
-
-    if (!title || !description || !image) {
-      return new NextResponse("All fields are required", { status: 400 });
+    if (!req.body) {
+      return new NextResponse("Please fill all mandatory fields.", {
+        status: 400,
+      });
     }
-    const updateCollection = await Collection.findByIdAndUpdate(collectionId, {
-      title,
-      description,
-      image,
-    });
-    await updateCollection.save();
+    const updateData: z.infer<typeof CollectionSchema> = await req.json();
 
-    return NextResponse.json(updateCollection, {
+    const response = await Collection.findOneAndUpdate(
+      { _id: collectionId },
+      { $set: updateData },
+      { new: true }
+    );
+    return new NextResponse(JSON.stringify(response), {
       status: 200,
+      headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.error("[collections_GET]", error);
-    return new NextResponse("Internal Server Error", { status: 500 });
+    console.log("[collections_PATCH]", error);
+    throw error;
   }
 };
 export const DELETE = async (
